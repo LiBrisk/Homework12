@@ -26,17 +26,30 @@ public class ShopRepository {
      * @param product — добавляемый товар
      */
     public void add(Product product) {
+        if (hasDuplicateId(product.getId())) {
+            throw new AlreadyExistsException(product.getId());
+        }
         products = addToArray(products, product);
     }
+
+
 
     public Product[] findAll() {
         return products;
     }
 
-    // Этот способ мы рассматривали в теории в теме про композицию
+    private boolean hasDuplicateId(int id) {
+        for (Product product : products) {
+            if (product.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void remove(int id) {
-        Product removeProduct = findById(id);
-        if (removeProduct == null) {
+        Product removedProduct = findById(id);
+        if (removedProduct == null) {
             throw new NotFoundException(id);
         }
         Product[] tmp = new Product[products.length - 1];
@@ -49,6 +62,7 @@ public class ShopRepository {
         }
         products = tmp;
     }
+
     public Product findById(int id) {
         for (Product product : products) {
             if (product.getId() == id) {
@@ -57,4 +71,5 @@ public class ShopRepository {
         }
         return null;
     }
+
 }

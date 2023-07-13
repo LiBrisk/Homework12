@@ -33,4 +33,18 @@ public class AddProductTest {
         );
     }
 
+    @Test
+    public void testAddProductAlreadyExists() {
+        ShopRepository shopRepository = new ShopRepository();
+        Product product1 = new Product(1, "Молоко", 100);
+        Product product2 = new Product(1, "Хлеб", 50);
+
+        shopRepository.add(product1);
+
+        Assertions.assertThrows(AlreadyExistsException.class,
+                () -> shopRepository.add(product2));
+
+    }
 }
+
+
